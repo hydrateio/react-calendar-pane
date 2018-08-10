@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class Day extends Component {
   render() {
@@ -10,19 +10,19 @@ class Day extends Component {
       classes,
       handleClick,
       children,
-    } = this.props;
+    } = this.props
 
-    const classNames = ['Day'];
+    const classNames = ['Day']
     if (today.isSame(date, 'day')) {
-      classNames.push('today');
+      classNames.push('today')
     }
     if (selected && selected.isSame(date, 'day')) {
-      classNames.push('selected');
+      classNames.push('selected')
     }
 
-    let body;
+    let body
     if (!!children) {
-      body = children;
+      body = children
     } else {
       body = (
         <button
@@ -32,7 +32,7 @@ class Day extends Component {
         >
           {date.format('D')}
         </button>
-      );
+      )
     }
 
     return (
@@ -43,7 +43,7 @@ class Day extends Component {
       >
         {body}
       </td>
-    );
+    )
   }
 }
 
@@ -53,6 +53,6 @@ Day.propTypes = {
   today: PropTypes.object.isRequired,
   selected: PropTypes.object,
   children: PropTypes.node,
-};
+}
 
-export default Day;
+export default Day

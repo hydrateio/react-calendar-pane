@@ -1,119 +1,119 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-import moment from 'moment';
-import Day from './Day';
-import DayOfWeek from './DayOfWeek';
-import Week from './Week';
+import moment from 'moment'
+import Day from './Day'
+import DayOfWeek from './DayOfWeek'
+import Week from './Week'
 
 class Calendar extends Component {
   constructor(props) {
-    super(props);
-    let date = props.date;
-    let month;
+    super(props)
+    let date = props.date
+    let month
     if (date) {
-      month = props.date;
+      month = props.date
     } else {
-      month = props.month;
+      month = props.month
     }
     this.state = {
       date: date,
       month: month,
-    };
+    }
 
-    this.previous = this.previous.bind(this);
-    this.next = this.next.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.previous = this.previous.bind(this)
+    this.next = this.next.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentWillMount() {
-    moment.locale(this.props.locale);
+    moment.locale(this.props.locale)
 
     if (!!this.state.date) {
-      this.state.date.locale(this.props.locale);
+      this.state.date.locale(this.props.locale)
     }
 
-    this.state.month.locale(this.props.locale);
+    this.state.month.locale(this.props.locale)
   }
 
   componentWillUpdate(nextProps, nextState) {
-    moment.locale(this.props.locale);
+    moment.locale(this.props.locale)
 
     if (!!nextState.date) {
-      nextState.date.locale(this.props.locale);
+      nextState.date.locale(this.props.locale)
     }
 
-    nextState.month.locale(this.props.locale);
+    nextState.month.locale(this.props.locale)
   }
 
   handleClick(date) {
-    const flag = this.props.onSelect(date, this.state.date, this.state.month);
+    const flag = this.props.onSelect(date, this.state.date, this.state.month)
 
     if (flag === true) {
       this.setState({
         date: moment(date),
-      });
+      })
     } else if (flag === false) {
       this.setState({
         date: null,
-      });
+      })
     }
   }
 
   previous() {
     this.setState({
       month: moment(this.state.month).subtract(1, 'month'),
-    });
+    })
   }
 
   next() {
     this.setState({
       month: moment(this.state.month).add(1, 'month'),
-    });
+    })
   }
 
   render() {
-    const { startOfWeekIndex, dayRenderer } = this.props;
+    const { startOfWeekIndex, dayRenderer } = this.props
 
-    const classes = ['Calendar', this.props.className].join(' ');
+    const classes = ['Calendar', this.props.className].join(' ')
 
-    const today = moment();
+    const today = moment()
 
-    const date = this.state.date;
-    const month = this.state.month;
+    const date = this.state.date
+    const month = this.state.month
 
     const current = month
       .clone()
       .startOf('month')
-      .day(startOfWeekIndex);
+      .day(startOfWeekIndex)
     if (current.date() > 1 && current.date() < 7) {
-      current.subtract(7, 'd');
+      current.subtract(7, 'd')
     }
 
     const end = month
       .clone()
       .endOf('month')
-      .day(7 + startOfWeekIndex);
+      .day(7 + startOfWeekIndex)
 
     if (end.date() > 7) {
-      end.subtract(7, 'd');
+      end.subtract(7, 'd')
     }
 
-    const elements = [];
-    let days = [];
-    let week = 1;
-    let i = 1;
-    const daysOfWeek = [];
-    const day = current.clone();
+    const elements = []
+    let days = []
+    let week = 1
+    let i = 1
+    const daysOfWeek = []
+    const day = current.clone()
     for (let j = 0; j < 7; j++) {
-      const dayOfWeekKey = 'dayOfWeek' + j;
-      daysOfWeek.push(<DayOfWeek key={dayOfWeekKey} date={day.clone()} />);
-      day.add(1, 'days');
+      const dayOfWeekKey = 'dayOfWeek' + j
+      daysOfWeek.push(<DayOfWeek key={dayOfWeekKey} date={day.clone()} />)
+      day.add(1, 'days')
     }
     while (current.isBefore(end)) {
-      let dayClasses = this.props.dayClasses(current);
+      let dayClasses = this.props.dayClasses(current)
       if (!current.isSame(month, 'month')) {
-        dayClasses = dayClasses.concat(['other-month']);
+        dayClasses = dayClasses.concat(['other-month'])
       }
       let props = {
         date: current.clone(),
@@ -122,27 +122,27 @@ class Calendar extends Component {
         today: today,
         classes: dayClasses,
         handleClick: this.handleClick,
-      };
+      }
 
-      let children;
+      let children
       if (!!dayRenderer) {
-        children = dayRenderer(props);
+        children = dayRenderer(props)
       }
 
       days.push(
         <Day key={i++} {...props}>
           {children}
         </Day>
-      );
-      current.add(1, 'days');
+      )
+      current.add(1, 'days')
       if (current.day() === startOfWeekIndex) {
-        let weekKey = 'week' + week++;
-        elements.push(<Week key={weekKey}>{days}</Week>);
-        days = [];
+        let weekKey = 'week' + week++
+        elements.push(<Week key={weekKey}>{days}</Week>)
+        days = []
       }
     }
 
-    let nav;
+    let nav
 
     if (this.props.useNav) {
       nav = (
@@ -162,7 +162,7 @@ class Calendar extends Component {
             </button>
           </th>
         </tr>
-      );
+      )
     } else {
       nav = (
         <tr className="month-header">
@@ -171,7 +171,7 @@ class Calendar extends Component {
             <span className="year">{month.format('YYYY')}</span>
           </th>
         </tr>
-      );
+      )
     }
 
     return (
@@ -182,7 +182,7 @@ class Calendar extends Component {
         </thead>
         <tbody>{elements}</tbody>
       </table>
-    );
+    )
   }
 }
 Calendar.defaultProps = {
@@ -191,7 +191,7 @@ Calendar.defaultProps = {
   useNav: true,
   locale: 'en',
   startOfWeekIndex: 0,
-};
+}
 Calendar.propTypes = {
   onSelect: PropTypes.func.isRequired,
   date: PropTypes.object,
@@ -201,6 +201,6 @@ Calendar.propTypes = {
   locale: PropTypes.string,
   startOfWeekIndex: PropTypes.number,
   dayRenderer: PropTypes.func,
-};
+}
 
-export default Calendar;
+export default Calendar
