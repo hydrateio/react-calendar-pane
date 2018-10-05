@@ -55,6 +55,8 @@ export default class Example extends Component {
         />
         <p>Calendar with custom day renderer</p>
         <Calendar onSelect={this.onSelect} dayRenderer={customDayRenderer} />
+        <p>Calendar prevents future date selection</p>
+        <Calendar onSelect={this.onSelect} preventFutureDates />
       </div>
     )
   }

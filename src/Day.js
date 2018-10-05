@@ -10,6 +10,7 @@ class Day extends Component {
       classes,
       handleClick,
       children,
+      disabled
     } = this.props
 
     const classNames = ['Day']
@@ -29,6 +30,7 @@ class Day extends Component {
           className="Day-inner"
           onClick={() => handleClick(date)}
           type="button"
+          disabled={disabled}
         >
           {date.format('D')}
         </button>
@@ -53,6 +55,7 @@ Day.propTypes = {
   today: PropTypes.object.isRequired,
   selected: PropTypes.object,
   children: PropTypes.node,
+  disabled: PropTypes.bool,
 }
 
 export default Day
