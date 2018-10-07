@@ -96,7 +96,8 @@ var Day = function (_Component) {
           selected = _props.selected,
           classes = _props.classes,
           handleClick = _props.handleClick,
-          children = _props.children;
+          children = _props.children,
+          disabled = _props.disabled;
 
 
       var classNames = ['Day'];
@@ -118,7 +119,8 @@ var Day = function (_Component) {
             onClick: function onClick() {
               return handleClick(date);
             },
-            type: 'button'
+            type: 'button',
+            disabled: disabled
           },
           date.format('D')
         );
@@ -143,7 +145,8 @@ Day.propTypes = {
   date: PropTypes.object.isRequired,
   today: PropTypes.object.isRequired,
   selected: PropTypes.object,
-  children: PropTypes.node
+  children: PropTypes.node,
+  disabled: PropTypes.bool
 };
 
 var DayOfWeek = function DayOfWeek(_ref) {
@@ -250,7 +253,8 @@ var Calendar = function (_Component) {
     value: function render() {
       var _props = this.props,
           startOfWeekIndex = _props.startOfWeekIndex,
-          dayRenderer = _props.dayRenderer;
+          dayRenderer = _props.dayRenderer,
+          preventFutureDates = _props.preventFutureDates;
 
 
       var classes = ['Calendar', this.props.className].join(' ');
@@ -287,13 +291,16 @@ var Calendar = function (_Component) {
         if (!current.isSame(month, 'month')) {
           dayClasses = dayClasses.concat(['other-month']);
         }
+        var disabled = preventFutureDates && current.isAfter(date);
+
         var props = {
           date: current.clone(),
           selected: date,
           month: month,
           today: today,
           classes: dayClasses,
-          handleClick: this.handleClick
+          handleClick: this.handleClick,
+          disabled: disabled
         };
 
         var children = void 0;
@@ -321,6 +328,8 @@ var Calendar = function (_Component) {
       var nav = void 0;
 
       if (this.props.useNav) {
+        var _disabled = preventFutureDates && end.isAfter(date) && month.isSame(date, 'month');
+
         nav = React__default.createElement(
           'tr',
           { className: 'month-header' },
@@ -353,7 +362,12 @@ var Calendar = function (_Component) {
             { className: 'nav next' },
             React__default.createElement(
               'button',
-              { className: 'nav-inner', onClick: this.next, type: 'button' },
+              {
+                className: 'nav-inner',
+                onClick: this.next,
+                type: 'button',
+                disabled: _disabled
+              },
               '\xBB'
             )
           )
@@ -425,7 +439,8 @@ Calendar.propTypes = {
   useNav: PropTypes.bool,
   locale: PropTypes.string,
   startOfWeekIndex: PropTypes.number,
-  dayRenderer: PropTypes.func
+  dayRenderer: PropTypes.func,
+  preventFutureDates: PropTypes.bool
 };
 
 module.exports = Calendar;

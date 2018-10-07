@@ -73,7 +73,7 @@ class Calendar extends Component {
   }
 
   render() {
-    const { startOfWeekIndex, dayRenderer } = this.props
+    const { startOfWeekIndex, dayRenderer, preventFutureDates } = this.props
 
     const classes = ['Calendar', this.props.className].join(' ')
 
@@ -115,6 +115,8 @@ class Calendar extends Component {
       if (!current.isSame(month, 'month')) {
         dayClasses = dayClasses.concat(['other-month'])
       }
+      const disabled = preventFutureDates && current.isAfter(date)
+
       let props = {
         date: current.clone(),
         selected: date,
@@ -122,6 +124,7 @@ class Calendar extends Component {
         today: today,
         classes: dayClasses,
         handleClick: this.handleClick,
+        disabled
       }
 
       let children
@@ -145,6 +148,9 @@ class Calendar extends Component {
     let nav
 
     if (this.props.useNav) {
+      let disabled =
+        preventFutureDates && end.isAfter(date) && month.isSame(date, 'month')
+
       nav = (
         <tr className="month-header">
           <th className="nav previous">
@@ -157,7 +163,12 @@ class Calendar extends Component {
             <span className="year">{month.format('YYYY')}</span>
           </th>
           <th className="nav next">
-            <button className="nav-inner" onClick={this.next} type="button">
+            <button
+              className="nav-inner"
+              onClick={this.next}
+              type="button"
+              disabled={disabled}
+            >
               »
             </button>
           </th>
@@ -201,6 +212,7 @@ Calendar.propTypes = {
   locale: PropTypes.string,
   startOfWeekIndex: PropTypes.number,
   dayRenderer: PropTypes.func,
+  preventFutureDates: PropTypes.bool,
 }
 
 export default Calendar
