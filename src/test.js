@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, cleanup } from 'react-testing-library'
+import { render, cleanup, fireEvent } from 'react-testing-library'
 import 'jest-dom/extend-expect'
 import moment from 'moment'
 
@@ -13,17 +13,34 @@ describe('Calendar', () => {
   })
 
   it('prevents selection of future dates', () => {
-    const { getByText } = render(<Calendar onSelect={() => {}} preventFutureDates />)
+    const { getByText } = render(
+      <Calendar onSelect={() => true} preventFutureDates />
+    )
 
-    // next day should be disabled
     const date = moment()
-    const nextDay = date.add(1, 'days')
-    const nextNextDay = nextDay.add(1, 'days')
+    const today = getByText(date.format('D'))
+    const tomorrow = getByText(
+      date
+        .clone()
+        .add(1, 'days')
+        .format('D')
+    )
+    const yesterday = getByText(
+      date
+        .clone()
+        .subtract(1, 'days')
+        .format('D')
+    )
 
-    expect(getByText(nextDay.format('D'))).toHaveAttribute('disabled')
-    expect(getByText(nextNextDay.format('D'))).toHaveAttribute('disabled')
+    // tomorrow should be disabled
+    expect(tomorrow).toBeDisabled()
 
     // next month arrow should be disabled
-    expect(getByText('»')).toHaveAttribute('disabled')
+    expect(getByText('»')).toBeDisabled()
+
+    // change the date back a day and confirm today is enabled
+    fireEvent.click(yesterday)
+
+    expect(today).not.toBeDisabled()
   })
 })
