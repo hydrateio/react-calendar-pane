@@ -115,7 +115,7 @@ class Calendar extends Component {
       if (!current.isSame(month, 'month')) {
         dayClasses = dayClasses.concat(['other-month'])
       }
-      const disabled = preventFutureDates && current.isAfter(date)
+      const disabled = preventFutureDates && current.isAfter(today)
 
       let props = {
         date: current.clone(),
